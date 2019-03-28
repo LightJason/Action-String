@@ -461,4 +461,36 @@ public final class TestCActionString extends IBaseTest
         );
     }
 
+    /**
+     * test replace
+     */
+    @Test
+    public void replace()
+    {
+        final List<ITerm> l_return = new ArrayList<>();
+
+        new CReplace().execute(
+            false,
+            IContext.EMPTYPLAN,
+            Stream.of( "oo", "xx", "foobar", "root" ).map( CRawTerm::of ).collect( Collectors.toList() ),
+            l_return
+        );
+
+        Assert.assertArrayEquals(
+            Stream.of( "fxxbar", "rxxt" ).toArray(),
+            l_return.stream().map( ITerm::raw ).toArray()
+        );
+    }
+
+    /**
+     * test lambda
+     */
+    @Test
+    public void lambda()
+    {
+        Assert.assertArrayEquals(
+            Stream.of( "a", "b", "c", "d", "e", "f", "g" ).toArray(),
+            new CLambdaStreaming().apply( "abcdefg" ).toArray()
+        );
+    }
 }
