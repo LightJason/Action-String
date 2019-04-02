@@ -50,7 +50,7 @@
     .test/result( .bool/equal( SReplace, "a-b-defg-xyz-ui" ), "string replace has been failed" );
 
     SRand = .string/random( "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 20 );
-    .generic/print("string", SBase64, "--", SReverse, "--", SUpper, "--", SLower, "--", SReplace, "--", SRand );
+    .test/print("string", SBase64, "--", SReverse, "--", SUpper, "--", SLower, "--", SReplace, "--", SRand );
 
-    .generic/print("string executed completly")
+    .test/print("string executed completly")
 .
