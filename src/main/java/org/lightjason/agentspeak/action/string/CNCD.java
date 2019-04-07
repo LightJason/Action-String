@@ -47,7 +47,7 @@ import java.util.stream.Stream;
  * the next string argument will be the input string and the distances will be
  * calculated between the second and all other arguments
  *
- * {@code [A|B] = .string/ncd( "BZIP|GZIP|DEFLATE|PACK200|XZ", "foo bar", "test foo", "bar foo" );}
+ * {@code [A|B] = .string/ncd( "BZIP|GZIP|DEFLATE|DEFLATE64|PACK200", "foo bar", "test foo", "bar foo" );}
  *
  * @see https://en.wikipedia.org/wiki/Normalized_compression_distance
  */
