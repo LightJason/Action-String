@@ -85,7 +85,7 @@ public final class CBase64Decode extends IBaseAction
                .map( ITerm::<String>raw )
                .forEach( i -> CBase64Decode.apply( p_context, i, p_return ) );
 
-        return Stream.of();
+        return Stream.empty();
     }
 
     /**

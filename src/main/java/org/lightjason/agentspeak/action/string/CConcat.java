@@ -83,7 +83,7 @@ public final class CConcat extends IBaseAction
                    .map( i -> i.raw().toString() )
                    .collect( Collectors.joining() )
         ) );
-        return Stream.of();
+        return Stream.empty();
     }
 
 }

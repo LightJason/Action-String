@@ -82,7 +82,7 @@ public final class CStartsWith extends IBaseAction
                .map( CRawTerm::of )
                .forEach( p_return::add );
 
-        return Stream.of();
+        return Stream.empty();
     }
 
 }
