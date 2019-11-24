@@ -46,7 +46,7 @@ import java.util.stream.Stream;
  *
  * {@code [A|B] = .string/replace( "search", "replace with", "this is a search string", "this is another string" );}
  *
- * @see https://en.wikipedia.org/wiki/Regular_expression
+ * @see <a href="https://en.wikipedia.org/wiki/Regular_expression"></a>
  */
 public final class CReplace extends IBaseAction
 {

@@ -48,7 +48,7 @@ import java.util.stream.Stream;
  *
  * {@code [A|B] = .string/base64decode( "aGVsbG8=", "QWdlbnRTcGVhayhMKysp" );}
  *
- * @see https://en.wikipedia.org/wiki/Base64
+ * @see <a href="https://en.wikipedia.org/wiki/Base64"></a>
  */
 public final class CBase64Decode extends IBaseAction
 {

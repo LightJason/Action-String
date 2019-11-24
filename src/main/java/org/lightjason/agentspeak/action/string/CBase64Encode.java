@@ -45,7 +45,7 @@ import java.util.stream.Stream;
  *
  * {@code [A|B] = .string/base64encode( "Hello", "AgentSpeak(L++)" );}
  *
- * @see https://en.wikipedia.org/wiki/Base64
+ * @see <a href="https://en.wikipedia.org/wiki/Base64"></a>
  */
 public final class CBase64Encode extends IBaseAction
 {

@@ -49,7 +49,7 @@ import java.util.stream.Stream;
  *
  * {@code [A|B] = .string/ncd( "BZIP|GZIP|DEFLATE|DEFLATE64|PACK200", "foo bar", "test foo", "bar foo" );}
  *
- * @see https://en.wikipedia.org/wiki/Normalized_compression_distance
+ * @see <a href="https://en.wikipedia.org/wiki/Normalized_compression_distance"></a>
  */
 public final class CNCD extends IBaseAction
 {

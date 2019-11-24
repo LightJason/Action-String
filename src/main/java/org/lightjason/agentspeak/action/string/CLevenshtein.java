@@ -51,7 +51,7 @@ import java.util.stream.Stream;
  *
  * {@code [A|B] = .string/levenshtein( 1,1.5,3, "start", "end", "starting" );}
  *
- * @see https://en.wikipedia.org/wiki/Levenshtein_distance
+ * @see <a href="https://en.wikipedia.org/wiki/Levenshtein_distance"></a>
  */
 public final class CLevenshtein extends IBaseAction
 {
