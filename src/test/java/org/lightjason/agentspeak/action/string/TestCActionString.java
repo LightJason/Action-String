@@ -110,7 +110,8 @@ public final class TestCActionString extends IBaseTest
                                  () -> new CBase64Decode().execute(
                                     false,
                                     IContext.EMPTYPLAN,
-                                    Stream.of( new String( "test encodingwith german additional character: öäß".getBytes( StandardCharsets.UTF_16 ), StandardCharsets.UTF_16 ) )
+                                    Stream.of( new String( "test encodingwith german additional character: öäß".getBytes( StandardCharsets.UTF_16 ),
+                                                           StandardCharsets.UTF_16 ) )
                                       .map( CRawTerm::of )
                                       .collect( Collectors.toList() ),
                                     Collections.emptyList()
