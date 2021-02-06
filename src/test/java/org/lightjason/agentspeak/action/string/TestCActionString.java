@@ -24,19 +24,17 @@
 package org.lightjason.agentspeak.action.string;
 
 import com.codepoetics.protonpack.StreamUtils;
-import com.tngtech.java.junit.dataprovider.DataProvider;
-import com.tngtech.java.junit.dataprovider.DataProviderRunner;
-import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.lightjason.agentspeak.error.context.CExecutionIllegealArgumentException;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ITerm;
 import org.lightjason.agentspeak.language.execution.IContext;
 import org.lightjason.agentspeak.testing.IBaseTest;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -50,7 +48,6 @@ import java.util.stream.Stream;
 /**
  * test for string actions
  */
-@RunWith( DataProviderRunner.class )
 public final class TestCActionString extends IBaseTest
 {
 
@@ -58,12 +55,11 @@ public final class TestCActionString extends IBaseTest
      * data provider generator
      * @return data
      */
-    @DataProvider
-    public static Object[] generate()
+    public static Stream<Arguments> generate()
     {
         return Stream.of(
-                Stream.of( "fooo", "#!$foo", "1234o097", "AboCDef", "foo", "BARo" ).collect( Collectors.toList() )
-        ).toArray();
+                Arguments.of( Stream.of( "fooo", "#!$foo", "1234o097", "AboCDef", "foo", "BARo" ).collect( Collectors.toList() ) )
+        );
     }
 
     /**
@@ -71,14 +67,14 @@ public final class TestCActionString extends IBaseTest
      *
      * @param p_input test arguments
      */
-    @Test
-    @UseDataProvider( "generate" )
+    @ParameterizedTest
+    @MethodSource( "generate" )
     public void base64( final List<String> p_input )
     {
         final List<ITerm> l_return = new ArrayList<>();
         final List<ITerm> l_result = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CBase64Encode(),
                 false,
@@ -87,7 +83,7 @@ public final class TestCActionString extends IBaseTest
             )
         );
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CBase64Decode(),
                 false,
@@ -100,25 +96,25 @@ public final class TestCActionString extends IBaseTest
             p_input.stream(),
             l_result.stream().map( ITerm::<String>raw ),
             AbstractMap.SimpleImmutableEntry::new
-        ).forEach( i -> Assert.assertEquals( i.getValue(), i.getKey() ) );
+        ).forEach( i -> Assertions.assertEquals( i.getValue(), i.getKey() ) );
     }
 
 
     /**
      * test base64 decode with errors
-     *
-     * @throws UnsupportedEncodingException is thrown on test data encoding
      */
-    @Test( expected = CExecutionIllegealArgumentException.class )
-    public void base64decodeerror() throws UnsupportedEncodingException
+    @Test
+    public void base64decodeerror()
     {
-        new CBase64Decode().execute(
-            false,
-            IContext.EMPTYPLAN,
-            Stream.of( new String( "test encodingwith german additional character: öäß".getBytes( StandardCharsets.UTF_16 ), StandardCharsets.UTF_16 ) )
-              .map( CRawTerm::of )
-              .collect( Collectors.toList() ),
-            Collections.emptyList()
+        Assertions.assertThrows( CExecutionIllegealArgumentException.class,
+                                 () -> new CBase64Decode().execute(
+                                    false,
+                                    IContext.EMPTYPLAN,
+                                    Stream.of( new String( "test encodingwith german additional character: öäß".getBytes( StandardCharsets.UTF_16 ), StandardCharsets.UTF_16 ) )
+                                      .map( CRawTerm::of )
+                                      .collect( Collectors.toList() ),
+                                    Collections.emptyList()
+                                )
         );
     }
 
@@ -128,13 +124,13 @@ public final class TestCActionString extends IBaseTest
      *
      * @param p_input test arguments
      */
-    @Test
-    @UseDataProvider( "generate" )
+    @ParameterizedTest
+    @MethodSource( "generate" )
     public void concat( final List<String> p_input )
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CConcat(),
                 false,
@@ -143,7 +139,7 @@ public final class TestCActionString extends IBaseTest
             )
         );
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             p_input.stream().collect( Collectors.joining() ),
             l_return.get( 0 ).<String>raw()
         );
@@ -155,13 +151,13 @@ public final class TestCActionString extends IBaseTest
      *
      * @param p_input test arguments
      */
-    @Test
-    @UseDataProvider( "generate" )
+    @ParameterizedTest
+    @MethodSource( "generate" )
     public void contains( final List<String> p_input )
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CContains(),
                 false,
@@ -173,7 +169,7 @@ public final class TestCActionString extends IBaseTest
             )
         );
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             l_return.stream()
                     .allMatch( ITerm::raw )
         );
@@ -185,13 +181,13 @@ public final class TestCActionString extends IBaseTest
      *
      * @param p_input test arguments
      */
-    @Test
-    @UseDataProvider( "generate" )
+    @ParameterizedTest
+    @MethodSource( "generate" )
     public void lower( final List<String> p_input )
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CLower(),
                 false,
@@ -204,7 +200,7 @@ public final class TestCActionString extends IBaseTest
             p_input.stream().map( i -> i.toLowerCase( Locale.ROOT ) ),
             l_return.stream().map( ITerm::<String>raw ),
             AbstractMap.SimpleImmutableEntry::new
-        ).forEach( i -> Assert.assertEquals( i.getValue(), i.getKey() ) );
+        ).forEach( i -> Assertions.assertEquals( i.getValue(), i.getKey() ) );
     }
 
 
@@ -213,13 +209,13 @@ public final class TestCActionString extends IBaseTest
      *
      * @param p_input test arguments
      */
-    @Test
-    @UseDataProvider( "generate" )
+    @ParameterizedTest
+    @MethodSource( "generate" )
     public void reverse( final List<String> p_input )
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CReverse(),
                 false,
@@ -232,7 +228,7 @@ public final class TestCActionString extends IBaseTest
             p_input.stream().map( i -> new StringBuilder( i ).reverse().toString() ),
             l_return.stream().map( ITerm::<String>raw ),
             AbstractMap.SimpleImmutableEntry::new
-        ).forEach( i -> Assert.assertEquals( i.getValue(), i.getKey() ) );
+        ).forEach( i -> Assertions.assertEquals( i.getValue(), i.getKey() ) );
     }
 
 
@@ -241,13 +237,13 @@ public final class TestCActionString extends IBaseTest
      *
      * @param p_input test arguments
      */
-    @Test
-    @UseDataProvider( "generate" )
+    @ParameterizedTest
+    @MethodSource( "generate" )
     public void size( final List<String> p_input )
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CSize(),
                 false,
@@ -260,7 +256,7 @@ public final class TestCActionString extends IBaseTest
             p_input.stream().mapToLong( String::length ).boxed(),
             l_return.stream().map( ITerm::<Number>raw ).map( Number::longValue ),
             AbstractMap.SimpleImmutableEntry::new
-        ).forEach( i -> Assert.assertEquals( i.getValue(), i.getKey() ) );
+        ).forEach( i -> Assertions.assertEquals( i.getValue(), i.getKey() ) );
     }
 
 
@@ -269,13 +265,13 @@ public final class TestCActionString extends IBaseTest
      *
      * @param p_input test arguments
      */
-    @Test
-    @UseDataProvider( "generate" )
+    @ParameterizedTest
+    @MethodSource( "generate" )
     public void random( final List<String> p_input )
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CRandom(),
                 false,
@@ -291,7 +287,7 @@ public final class TestCActionString extends IBaseTest
             p_input.stream().mapToInt( String::length ).boxed(),
             l_return.stream().map( ITerm::<String>raw ).mapToInt( String::length ).boxed(),
             AbstractMap.SimpleImmutableEntry::new
-        ).forEach( i -> Assert.assertEquals( i.getValue(), i.getKey() ) );
+        ).forEach( i -> Assertions.assertEquals( i.getValue(), i.getKey() ) );
     }
 
 
@@ -300,13 +296,13 @@ public final class TestCActionString extends IBaseTest
      *
      * @param p_input test arguments
      */
-    @Test
-    @UseDataProvider( "generate" )
+    @ParameterizedTest
+    @MethodSource( "generate" )
     public void upper( final List<String> p_input )
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CUpper(),
                 false,
@@ -319,7 +315,7 @@ public final class TestCActionString extends IBaseTest
             p_input.stream().map( i -> i.toUpperCase( Locale.ROOT ) ),
             l_return.stream().map( ITerm::<String>raw ),
             AbstractMap.SimpleImmutableEntry::new
-        ).forEach( i -> Assert.assertEquals( i.getValue(), i.getKey() ) );
+        ).forEach( i -> Assertions.assertEquals( i.getValue(), i.getKey() ) );
     }
 
 
@@ -331,7 +327,7 @@ public final class TestCActionString extends IBaseTest
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CStartsWith(),
                 false,
@@ -340,10 +336,10 @@ public final class TestCActionString extends IBaseTest
             )
         );
 
-        Assert.assertEquals( 3, l_return.size() );
-        Assert.assertTrue( l_return.get( 0 ).<Boolean>raw() );
-        Assert.assertTrue( l_return.get( 1 ).<Boolean>raw() );
-        Assert.assertFalse( l_return.get( 2 ).<Boolean>raw() );
+        Assertions.assertEquals( 3, l_return.size() );
+        Assertions.assertTrue( l_return.get( 0 ).<Boolean>raw() );
+        Assertions.assertTrue( l_return.get( 1 ).<Boolean>raw() );
+        Assertions.assertFalse( l_return.get( 2 ).<Boolean>raw() );
     }
 
 
@@ -355,7 +351,7 @@ public final class TestCActionString extends IBaseTest
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CEndsWith(),
                 false,
@@ -364,24 +360,26 @@ public final class TestCActionString extends IBaseTest
             )
         );
 
-        Assert.assertEquals( 3, l_return.size() );
-        Assert.assertTrue( l_return.get( 0 ).<Boolean>raw() );
-        Assert.assertFalse( l_return.get( 1 ).<Boolean>raw() );
-        Assert.assertTrue( l_return.get( 2 ).<Boolean>raw() );
+        Assertions.assertEquals( 3, l_return.size() );
+        Assertions.assertTrue( l_return.get( 0 ).<Boolean>raw() );
+        Assertions.assertFalse( l_return.get( 1 ).<Boolean>raw() );
+        Assertions.assertTrue( l_return.get( 2 ).<Boolean>raw() );
     }
 
 
     /**
      * tets for levenshtein distance error
      */
-    @Test( expected = CExecutionIllegealArgumentException.class )
+    @Test
     public void levenshteinerror()
     {
-        new CLevenshtein().execute(
-            false,
-            IContext.EMPTYPLAN,
-            Collections.emptyList(),
-            Collections.emptyList()
+        Assertions.assertThrows( CExecutionIllegealArgumentException.class,
+                                 () -> new CLevenshtein().execute(
+                                    false,
+                                    IContext.EMPTYPLAN,
+                                    Collections.emptyList(),
+                                    Collections.emptyList()
+                                )
         );
     }
 
@@ -394,7 +392,7 @@ public final class TestCActionString extends IBaseTest
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CLevenshtein(),
                 false,
@@ -403,9 +401,9 @@ public final class TestCActionString extends IBaseTest
             )
         );
 
-        Assert.assertEquals( 2, l_return.size() );
-        Assert.assertEquals( 3, l_return.get( 0 ).<Number>raw().intValue() );
-        Assert.assertEquals( 5, l_return.get( 1 ).<Number>raw().intValue() );
+        Assertions.assertEquals( 2, l_return.size() );
+        Assertions.assertEquals( 3, l_return.get( 0 ).<Number>raw().intValue() );
+        Assertions.assertEquals( 5, l_return.get( 1 ).<Number>raw().intValue() );
     }
 
 
@@ -417,7 +415,7 @@ public final class TestCActionString extends IBaseTest
     {
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CNCD(),
                 false,
@@ -426,12 +424,12 @@ public final class TestCActionString extends IBaseTest
             )
         );
 
-        Assert.assertEquals( 3, l_return.size() );
-        Assert.assertEquals( 0.04878048780487805, l_return.get( 0 ).<Number>raw().doubleValue(), 0.0001 );
-        Assert.assertEquals( 0.38333333333333336, l_return.get( 1 ).<Number>raw().doubleValue(), 0.0001 );
-        Assert.assertEquals( 0, l_return.get( 2 ).<Number>raw().doubleValue(), 0 );
+        Assertions.assertEquals( 3, l_return.size() );
+        Assertions.assertEquals( 0.04878048780487805, l_return.get( 0 ).<Number>raw().doubleValue(), 0.0001 );
+        Assertions.assertEquals( 0.38333333333333336, l_return.get( 1 ).<Number>raw().doubleValue(), 0.0001 );
+        Assertions.assertEquals( 0, l_return.get( 2 ).<Number>raw().doubleValue(), 0 );
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CNCD(),
                 false,
@@ -440,24 +438,26 @@ public final class TestCActionString extends IBaseTest
             )
         );
 
-        Assert.assertEquals( 6, l_return.size() );
-        Assert.assertEquals( 0.12, l_return.get( 3 ).<Number>raw().doubleValue(), 0 );
-        Assert.assertEquals( 0.5833333333333334, l_return.get( 4 ).<Number>raw().doubleValue(),  0.0001 );
-        Assert.assertEquals( 0, l_return.get( 5 ).<Number>raw().doubleValue(), 0 );
+        Assertions.assertEquals( 6, l_return.size() );
+        Assertions.assertEquals( 0.12, l_return.get( 3 ).<Number>raw().doubleValue(), 0 );
+        Assertions.assertEquals( 0.5833333333333334, l_return.get( 4 ).<Number>raw().doubleValue(),  0.0001 );
+        Assertions.assertEquals( 0, l_return.get( 5 ).<Number>raw().doubleValue(), 0 );
     }
 
 
     /**
      * test normalized compression distance error
      */
-    @Test( expected = CExecutionIllegealArgumentException.class )
+    @Test
     public void ncderror()
     {
-        new CNCD().execute(
-            false,
-            IContext.EMPTYPLAN,
-            Collections.emptyList(),
-            Collections.emptyList()
+        Assertions.assertThrows( CExecutionIllegealArgumentException.class,
+                                 () -> new CNCD().execute(
+                                    false,
+                                    IContext.EMPTYPLAN,
+                                    Collections.emptyList(),
+                                    Collections.emptyList()
+                                )
         );
     }
 
@@ -476,7 +476,7 @@ public final class TestCActionString extends IBaseTest
             l_return
         );
 
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
             Stream.of( "fxxbar", "rxxt" ).toArray(),
             l_return.stream().map( ITerm::raw ).toArray()
         );
@@ -488,7 +488,7 @@ public final class TestCActionString extends IBaseTest
     @Test
     public void lambda()
     {
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
             Stream.of( "a", "b", "c", "d", "e", "f", "g" ).toArray(),
             new CLambdaStreaming().apply( "abcdefg" ).toArray()
         );
